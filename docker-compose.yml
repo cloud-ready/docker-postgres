@@ -1,0 +1,49 @@
+
+version: '2.1'
+services:
+  postgres-develop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+      - IMAGE_ARG_ALPINE_MIRROR=${IMAGE_ARG_ALPINE_MIRROR:-mirror.tuna.tsinghua.edu.cn}
+      - IMAGE_ARG_IMAGE_TAG=${IMAGE_ARG_IMAGE_TAG:-9.6.9-alpine}
+    container_name: ${CONTAINER_HOST_NAME:-postgres}
+    environment:
+    - POSTGRES_USER=${POSTGRES_USER:-user}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-user_pass}
+    - SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME:-sonar}
+    - SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD:-sonar}
+    hostname: ${CONTAINER_HOST_NAME:-postgres}
+    image: ${IMAGE_PREFIX:-cloudready}/${IMAGE_NAME:-postgres}:${IMAGE_TAG:-9.6.9-alpine-SNAPSHOT}
+    ports:
+    - "${POSTGRESQL_EXTERNAL_PORT:-5432}:${POSTGRESQL_PORT:-5432}"
+
+    restart: always
+    volumes:
+    # This needs explicit mapping due to https://github.com/docker-library/postgres/blob/4e48e3228a30763913ece952c611e5e9b95c8759/Dockerfile.template#L52
+    # initdb: directory "/var/lib/postgresql/data" exists but is not empty
+    # It contains a dot-prefixed/invisible file, perhaps due to it being a mount point.
+    # Using a mount point directly as the data directory is not recommended.
+    # Create a subdirectory under the mount point.
+    - data:/var/lib/postgresql/data
+    #- ./init_database_for_sonarqube.sh:/docker-entrypoint-initdb.d/init_database_for_sonarqube.sh
+
+networks:
+  local-network:
+    external: true
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
+      - subnet: 2001:3984:3989::/64
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data/data
+      o: bind

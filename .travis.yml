@@ -1,0 +1,32 @@
+
+addons:
+  apt:
+    packages:
+    - aria2
+#before_install:
+branches:
+  only:
+  - develop
+  - master
+
+dist: trusty
+env:
+  global:
+  - IMAGE_ARG_ALPINE_MIRROR=dl-cdn.alpinelinux.org
+  matrix:
+  - IMAGE_ARG_IMAGE_TAG=9.6.9-alpine
+  - IMAGE_ARG_IMAGE_TAG=9.6.9
+
+group: edge
+#install: true
+
+#before_script:
+script:
+- while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
+- bash build.sh
+- kill %1
+#after_script:
+
+services:
+- docker
+sudo: required
