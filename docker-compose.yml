@@ -15,7 +15,7 @@ services:
     - SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME:-sonar}
     - SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD:-sonar}
     hostname: ${CONTAINER_HOST_NAME:-postgres}
-    image: ${IMAGE_PREFIX:-cloudready}/${IMAGE_NAME:-postgres}:${IMAGE_TAG:-9.6.9-alpine-SNAPSHOT}
+    image: ${IMAGE_PREFIX:-cloudready/}${IMAGE_NAME:-postgres}:${IMAGE_TAG:-9.6.9-alpine-SNAPSHOT}
     ports:
     - "${POSTGRESQL_EXTERNAL_PORT:-5432}:${POSTGRESQL_PORT:-5432}"
 
