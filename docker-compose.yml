@@ -8,13 +8,13 @@ services:
       args:
       - IMAGE_ARG_ALPINE_MIRROR=${IMAGE_ARG_ALPINE_MIRROR:-mirror.tuna.tsinghua.edu.cn}
       - IMAGE_ARG_IMAGE_TAG=${IMAGE_ARG_IMAGE_TAG:-9.6.9-alpine}
-    container_name: ${CONTAINER_HOST_NAME:-postgres}
+    container_name: ${CONTAINER_HOST_NAME:-standalone.postgres}
     environment:
     - POSTGRES_USER=${POSTGRES_USER:-user}
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-user_pass}
     - SONARQUBE_JDBC_USERNAME=${SONARQUBE_JDBC_USERNAME:-sonar}
     - SONARQUBE_JDBC_PASSWORD=${SONARQUBE_JDBC_PASSWORD:-sonar}
-    hostname: ${CONTAINER_HOST_NAME:-postgres}
+    hostname: ${CONTAINER_HOST_NAME:-standalone.postgres}
     image: ${IMAGE_PREFIX:-cloudready/}${IMAGE_NAME:-postgres}:${IMAGE_TAG:-9.6.9-alpine-SNAPSHOT}
     labels:
       deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
@@ -25,7 +25,7 @@ services:
       instance.name.short: ${LABEL_INSTANCE_NAME_SHORT:-standalone.postgres}
       instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/postgres/standalone}
     ports:
-    - "${POSTGRESQL_EXTERNAL_PORT:-5432}:${POSTGRESQL_PORT:-5432}"
+    - "${EXTERNAL_POSTGRESQL_5432_PORT:-5432}:5432"
 
     restart: always
     volumes:
