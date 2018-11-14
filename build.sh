@@ -17,7 +17,7 @@ if [ "${TRAVIS_BRANCH}" != "master" ]; then export IMAGE_TAG=${IMAGE_TAG}-SNAPSH
 # Build image
 docker network create --driver=bridge --ipam-driver=default --subnet=172.16.238.0/24 local-network
 if [[ "$(docker images -q ${IMAGE_PREFIX}${IMAGE_NAME}:${IMAGE_TAG} 2> /dev/null)" == "" ]]; then
-    docker-compose build postgres-develop
+    docker-compose build develop-postgres
 fi
 
 docker-compose push
